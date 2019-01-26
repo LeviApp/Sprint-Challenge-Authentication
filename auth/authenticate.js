@@ -15,18 +15,19 @@ function authenticate(req, res, next) {
   const token = req.get('Authorization');
 
   if (token) {
-    jwt.verify(token, jwtKey, (err, decodedToken ) => {
-        if (err) {
-          res.status(401).json({message: `Invalid Token`})
-        }
-
-        else {
-          req.username = decodedToken.username;
-          next();
-        }
-  } )
-}
-
-else { res.status(401).json({message: `No Token`})
-}
+    jwt.verify(token, jwtKey, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json({
+          message: `Invalid Token`
+        })
+      } else {
+        req.username = decodedToken.username;
+        next();
+      }
+    })
+  } else {
+    res.status(401).json({
+      message: `No Token`
+    })
+  }
 }

@@ -1,0 +1,23 @@
+What is the purpose of using sessions?
+
+        Sessions help a user stay signed in to a website. Sessions use a key that will
+        recognize a user on a specific device.
+
+What does bcrypt do to help us store passwords in a secure manner.
+    
+        It takes a password and spits out a random set of characters using an algorithm.
+        Another aspect bcrypt includes is salting. Salts are extra random characters added to the hash after the hashing
+        function is run.
+    
+    What does bcrypt do to slow down attackers?
+
+        Bcrypt is a one way function. Therefore, even if the attackers have the hashed password, they
+        would have to figure out the password through trial and error, through functions they themselves have written.
+        Another aspect bcrypt includes is salting. Salts are extra random characters added to the hash after the hashing
+        function is run. This makes it even more secure, so hackers have a lot harder time figuring out a password.
+
+What are the three parts of the JSON Web Token?
+
+        The Payload, which includes useful data for access purposes. This data should not be sensitive.
+        The Secret, which is the password created by a user when registering.
+        The Options, which allow for expiration dates and other information.
