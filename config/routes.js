@@ -1,5 +1,13 @@
+require('dotenv/config')
+const {server} = require('../api/server.js')
+const express = require('express')
+const knex = require('knex')
 const axios = require('axios');
+const bcrypt = require('bcrypt')
+const dbConfig = require('../knexfile.js')
 
+const db = knex(dbConfig[process.env.DEV])
+const jwt = require('jsonwebtoken')
 const { authenticate } = require('../auth/authenticate');
 
 module.exports = server => {
@@ -9,7 +17,7 @@ module.exports = server => {
 };
 
 function register(req, res) {
-  // implement user registration
+
 }
 
 function login(req, res) {
