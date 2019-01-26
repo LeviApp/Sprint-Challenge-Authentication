@@ -1,5 +1,3 @@
-require('dotenv/config')
-const {server} = require('../api/server.js')
 const express = require('express')
 const knex = require('knex')
 const axios = require('axios');
@@ -9,7 +7,8 @@ const dbConfig = require('../knexfile.js')
 const db = knex(dbConfig[process.env.DEV])
 const jwt = require('jsonwebtoken')
 const { authenticate } = require('../auth/authenticate');
-const secret = "gold";
+const secret = process.env.JWT_SECRET;
+
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -53,6 +52,22 @@ function register(req, res) {
 }
 
 function login(req, res) {
+  const creds = req.body;
+
+  db('users')
+  .where({username: creds.username})
+  .first()
+  .then(user => {
+    if (user && bcrypt.compareSync(creds.password, user.password)) {
+      const token = generateToken(user);
+      res.json({message: `${user.username}, You are logged in!`, username: user.username, token})
+    }
+
+    else {res.status(401).json({message: `You failed to log in!`})}
+  })
+  .catch(err => {
+    res.status(500).json({message: `${err}`})
+  })
 }
 
 function getJokes(req, res) {
@@ -60,6 +75,7 @@ function getJokes(req, res) {
     headers: { accept: 'application/json' },
   };
 
+  if (req.username) {
   axios
     .get('https://icanhazdadjoke.com/search', requestOptions)
     .then(response => {
@@ -67,5 +83,7 @@ function getJokes(req, res) {
     })
     .catch(err => {
       res.status(500).json({ message: 'Error Fetching Jokes', error: err });
-    });
+    });}
+
+  else { res.status(500).json({message: 'Access Denied'})}
 }
